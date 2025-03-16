@@ -3,22 +3,26 @@
 import { Button } from "@/components/ui/button";
 
 import { signIn } from "@/lib/auth-client";
+import { toast } from "sonner";
+
+type SocialAuth = "google" | "github";
 
 export const Social = () => {
-  const googleHandler = async () => {
-    const { data, error } = await signIn.social({
-      provider: "google",
+  const socialHandler = async (socialAuth: SocialAuth) => {
+    const { error } = await signIn.social({
+      provider: socialAuth,
     });
 
-    console.log("this is data", data);
-    console.log("this is error", error);
-  };
-  const githubHandler = async () => {
-    const { data, error } = await signIn.social({
-      provider: "google",
-    });
-    console.log("this is data", data);
-    console.log("this is error", error);
+    if (error) {
+      toast.error(`${error.message}`, {
+        action: {
+          label: "Cancel",
+          onClick: () => console.log("Undo"),
+        },
+      });
+    } else {
+      toast.success("User login successfully");
+    }
   };
 
   return (
@@ -27,7 +31,7 @@ export const Social = () => {
         type="button"
         variant="outline"
         className="cursor-pointer"
-        onClick={googleHandler}
+        onClick={() => socialHandler("google")}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +62,7 @@ export const Social = () => {
         type="button"
         variant="outline"
         className="cursor-pointer"
-        onClick={githubHandler}
+        onClick={() => socialHandler("github")}
       >
         <svg
           aria-hidden="true"
