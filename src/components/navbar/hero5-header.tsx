@@ -7,6 +7,8 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./mode-toggle";
 import { MobileNavbar } from "./mobile-navbar";
+import { useSession } from "@/lib/auth-client";
+import { LogoutButton } from "./logout-button";
 
 const menuItems = [
   { name: "Features", href: "#link" },
@@ -16,6 +18,8 @@ const menuItems = [
 ];
 
 export const HeroHeader = () => {
+  const session = useSession();
+
   const [isScrolled, setIsScrolled] = React.useState(false);
 
   React.useEffect(() => {
@@ -62,27 +66,39 @@ export const HeroHeader = () => {
             </div>
 
             <div className="hidden lg:flex gap-4">
-              <Button asChild variant="outline">
-                <Link href="/sign-in">
-                  <span>Login</span>
-                </Link>
-              </Button>
-              <Button asChild className={cn(isScrolled && "lg:hidden")}>
-                <Link href="/sign-up">
-                  <span>Sign Up</span>
-                </Link>
-              </Button>
-              <Button
-                asChild
-                className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
-              >
-                <Link href="/sign-up">
-                  <span>Get Started </span>
-                </Link>
-              </Button>
+              {session ? (
+                <>
+                  <LogoutButton />
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Button asChild variant="outline">
+                    <Link href="/sign-in">
+                      <span>Login</span>
+                    </Link>
+                  </Button>
+                  <Button asChild className={cn(isScrolled && "lg:hidden")}>
+                    <Link href="/sign-up">
+                      <span>Sign Up</span>
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
+                  >
+                    <Link href="/sign-up">
+                      <span>Get Started </span>
+                    </Link>
+                  </Button>
+                </>
+              )}
               <ModeToggle />
             </div>
-            <MobileNavbar menuItems={menuItems}>
+            <MobileNavbar
+              menuItems={menuItems}
+              session={session?.data?.session}
+            >
               <Button size={"icon"} variant={"ghost"} className="lg:hidden">
                 <MenuIcon />
               </Button>

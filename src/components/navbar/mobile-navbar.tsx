@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Session } from "better-auth";
 
 import {
   Sheet,
@@ -9,13 +10,19 @@ import {
 } from "@/components/ui/sheet";
 import { ModeToggle } from "./mode-toggle";
 import { Button } from "@/components/ui/button";
+import { LogoutButton } from "./logout-button";
 
 interface MobileNavbarProps {
   children: React.ReactNode;
   menuItems: Record<string, string>[];
+  session: Session | undefined | null;
 }
 
-export const MobileNavbar = ({ children, menuItems }: MobileNavbarProps) => {
+export const MobileNavbar = ({
+  children,
+  menuItems,
+  session,
+}: MobileNavbarProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
@@ -42,17 +49,25 @@ export const MobileNavbar = ({ children, menuItems }: MobileNavbarProps) => {
           </ul>
 
           <div className="flex  flex-col gap-4">
-            <Button asChild variant="outline" className="w-full">
-              <Link href="/sign-in">
-                <span>Login</span>
-              </Link>
-            </Button>
-
-            <Button asChild className="w-full">
-              <Link href="/sign-up">
-                <span>Sign Up</span>
-              </Link>
-            </Button>
+            {session ? (
+              <>
+                <LogoutButton />
+              </>
+            ) : (
+              <>
+                {" "}
+                <Button asChild variant="outline" className="w-full">
+                  <Link href="/sign-in">
+                    <span>Login</span>
+                  </Link>
+                </Button>
+                <Button asChild className="w-full">
+                  <Link href="/sign-up">
+                    <span>Sign Up</span>
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </SheetContent>

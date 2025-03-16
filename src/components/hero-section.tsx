@@ -36,7 +36,9 @@ const transitionVariants = {
 
 export default function HeroSection() {
   const session = useSession();
-  console.log(session);
+  if (session?.isPending) {
+    return <Spinner />;
+  }
   return (
     <>
       <HeroHeader />

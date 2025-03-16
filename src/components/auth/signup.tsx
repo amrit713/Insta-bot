@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,24 +39,33 @@ export function Signup() {
   const isLoading = form.formState.isSubmitting;
 
   async function onSubmit(values: z.infer<typeof signupSchema>) {
-    const { error } = await signUp.email({
-      email: values.email,
-      name: values.fullName,
-      password: values.password,
-    });
-
-    if (error) {
-      toast.error(`${error.message}`, {
-        action: {
-          label: "Cancel",
-          onClick: () => console.log("Undo"),
+    await signUp.email(
+      {
+        email: values.email,
+        name: values.fullName,
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          //redirect to the dashboard or sign in page
+          toast.success("User signup successfully");
+          form.reset();
+          router.refresh();
         },
-      });
-    } else {
-      toast.success("User signup successfully");
-      form.reset();
-      router.refresh();
-    }
+
+        onRequest: (ctx) => {
+          // if(ctx)
+        },
+        onError: (ctx) => {
+          toast.error(`${ctx.error.message}`, {
+            action: {
+              label: "Cancel",
+              onClick: () => console.log("Undo"),
+            },
+          });
+        },
+      }
+    );
   }
 
   return (

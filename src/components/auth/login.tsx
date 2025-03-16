@@ -36,24 +36,27 @@ export function Login() {
   const isLoading = form.formState.isSubmitting;
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
-    const { error } = await signIn.email({
-      email: values.email,
-      password: values.password,
-    });
-
-    if (error) {
-      toast.error(`${error.message}`, {
-        action: {
-          label: "Cancel",
-          onClick: () => console.log("Undo"),
+    await signIn.email(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Login successfully!");
+          form.reset();
+          router.refresh();
         },
-      });
-    } else {
-      toast.success("User signup successfully");
-      form.reset();
-      router.refresh();
-      router.push("/");
-    }
+        onError: (ctx) => {
+          toast.error(`${ctx.error.message}`, {
+            action: {
+              label: "Cancel",
+              onClick: () => console.log("Undo"),
+            },
+          });
+        },
+      }
+    );
   }
 
   return (
