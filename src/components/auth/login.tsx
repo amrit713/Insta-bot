@@ -40,6 +40,7 @@ export function Login() {
       {
         email: values.email,
         password: values.password,
+        callbackURL: "/",
       },
       {
         onSuccess: () => {

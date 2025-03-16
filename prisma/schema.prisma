@@ -19,8 +19,8 @@ datasource db {
 
 model User {
   id            String    @id @default(uuid())
-  name          String    
-  email         String   
+  name          String
+  email         String
   emailVerified Boolean
   image         String?
   createdAt     DateTime
@@ -28,12 +28,16 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  subscription Subscription?
+  integrations Integrations[]
+  automations  Automation[]
+
   @@unique([email])
   @@map("user")
 }
 
 model Session {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   expiresAt DateTime
   token     String
   createdAt DateTime
@@ -48,7 +52,7 @@ model Session {
 }
 
 model Account {
-  id                    String     @id @default(uuid())
+  id                    String    @id @default(uuid())
   accountId             String
   providerId            String
   userId                String
@@ -67,7 +71,7 @@ model Account {
 }
 
 model Verification {
-  id         String     @id @default(uuid())
+  id         String    @id @default(uuid())
   identifier String
   value      String
   expiresAt  DateTime
@@ -75,4 +79,106 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+enum SUBSCRIPTION_PLAN {
+  PRO
+  FREE
+}
+
+model Subscription {
+  id         String            @id @default(uuid())
+  User       User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String?           @unique @db.Uuid
+  createdAt  DateTime          @default(now())
+  plan       SUBSCRIPTION_PLAN @default(FREE)
+  updatedAt  DateTime          @default(now())
+  customerId String?           @unique
+}
+
+model Automation {
+  id        String    @id @default(uuid())
+  name      String    @default("Untitled")
+  createdAt DateTime  @default(now())
+  active    Boolean   @default(false)
+  trigger   Trigger[]
+  listener  Listener?
+  posts     Post[]
+  dms       Dms[]
+  User      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?   @db.Uuid
+  keywords  Keyword[]
+}
+
+enum INTEGRATIONS {
+  INSTAGRAM
+}
+
+model Integrations {
+  id          String       @id @default(uuid())
+  name        INTEGRATIONS @default(INSTAGRAM)
+  createdAt   DateTime     @default(now())
+  User        User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?      @db.Uuid
+  token       String       @unique
+  expiresAt   DateTime?
+  instagramId String?      @unique
+}
+
+model Dms {
+  id           String      @id @default(uuid())
+  Automation   Automation? @relation(fields: [automationId], references: [id])
+  automationId String?     @db.Uuid
+  createdAt    DateTime    @default(now())
+  senderId     String?
+  receiver     String?
+  message      String?
+}
+
+enum MEDIATYPE {
+  IMAGE
+  VIDEO
+  CAROSEL_ALBUM
+}
+
+model Post {
+  id           String      @id @default(uuid())
+  postid       String
+  caption      String?
+  media        String
+  mediaType    MEDIATYPE   @default(IMAGE)
+  Automation   Automation? @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  automationId String?     @db.Uuid
+}
+
+enum LISTENERS {
+  SMARTAI
+  MESSAGE
+}
+
+model Listener {
+  id           String     @id @default(uuid())
+  Automation   Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  automationId String     @unique @db.Uuid
+  listener     LISTENERS  @default(MESSAGE)
+  prompt       String
+  commentReply String?
+  dmCount      Int        @default(0)
+  commentCount Int        @default(0)
+}
+
+model Trigger {
+  id           String      @id @default(uuid())
+  type         String // comment or dm automation
+  Automation   Automation? @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  automationId String?     @db.Uuid
+}
+
+model Keyword {
+  id           String      @id @default(uuid())
+  word         String
+  Automation   Automation? @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  automationId String?     @db.Uuid
+
+  @@unique([automationId, word]) //this constraints ensure user cant use the same keyword on multiple automations
 }
