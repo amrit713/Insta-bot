@@ -2,10 +2,33 @@
 
 import { Button } from "@/components/ui/button";
 
+import { signIn } from "@/lib/auth-client";
+
 export const Social = () => {
+  const googleHandler = async () => {
+    const { data, error } = await signIn.social({
+      provider: "google",
+    });
+
+    console.log("this is data", data);
+    console.log("this is error", error);
+  };
+  const githubHandler = async () => {
+    const { data, error } = await signIn.social({
+      provider: "google",
+    });
+    console.log("this is data", data);
+    console.log("this is error", error);
+  };
+
   return (
     <div className="grid grid-cols-2 gap-3">
-      <Button type="button" variant="outline" className="cursor-pointer">
+      <Button
+        type="button"
+        variant="outline"
+        className="cursor-pointer"
+        onClick={googleHandler}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="0.98em"
@@ -31,7 +54,12 @@ export const Social = () => {
         </svg>
         <span>Google</span>
       </Button>
-      <Button type="button" variant="outline" className="cursor-pointer">
+      <Button
+        type="button"
+        variant="outline"
+        className="cursor-pointer"
+        onClick={githubHandler}
+      >
         <svg
           aria-hidden="true"
           className="octicon octicon-mark-github dark:fill-white"
