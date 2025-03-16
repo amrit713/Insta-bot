@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronRight, Minus } from "lucide-react";
@@ -8,7 +10,9 @@ import { AnimatedGroup } from "@/components/ui/animated-group";
 import { HeroHeader } from "@/components/navbar/hero5-header";
 import MaxWidthWrapper from "./max-width-wrapper";
 import Pricing from "./pricing";
-import FooterSection from "./footer";
+import { Footer } from "./footer";
+import { useSession } from "@/lib/auth-client";
+import { Spinner } from "./spinner";
 
 const transitionVariants = {
   item: {
@@ -31,10 +35,15 @@ const transitionVariants = {
 };
 
 export default function HeroSection() {
+  const session = useSession();
+  if (!session.data) {
+    return <Spinner />;
+  }
+
   return (
     <>
       <HeroHeader />
-      <main className="overflow-hidden h-full ">
+      <main className=" h-full  ">
         <div
           aria-hidden
           className="absolute inset-0 isolate  opacity-65 contain-strict lg:block "
@@ -198,8 +207,11 @@ export default function HeroSection() {
             <Pricing />
           </MaxWidthWrapper>
         </section>
+
         <section>
-          <FooterSection />
+          <MaxWidthWrapper>
+            <Footer />
+          </MaxWidthWrapper>
         </section>
       </main>
     </>

@@ -63,12 +63,12 @@ export const HeroHeader = () => {
 
             <div className="hidden lg:flex gap-4">
               <Button asChild variant="outline">
-                <Link href="#">
+                <Link href="/sign-in">
                   <span>Login</span>
                 </Link>
               </Button>
               <Button asChild className={cn(isScrolled && "lg:hidden")}>
-                <Link href="#">
+                <Link href="/sign-up">
                   <span>Sign Up</span>
                 </Link>
               </Button>
@@ -76,7 +76,7 @@ export const HeroHeader = () => {
                 asChild
                 className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
               >
-                <Link href="#">
+                <Link href="/sign-up">
                   <span>Get Started </span>
                 </Link>
               </Button>

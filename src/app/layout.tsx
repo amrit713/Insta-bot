@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import { Geist, Geist_Mono, Roboto_Flex } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import React from "react";
+
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-});const font = Poppins({
-
+});
+const font = Roboto_Flex({
   subsets: ["latin"],
-  weight:["100", "200", "300","400","500","600","700","800","900"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -40,6 +42,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster position="top-right" />
         </ThemeProvider>
       </body>
     </html>

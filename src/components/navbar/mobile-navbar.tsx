@@ -43,13 +43,13 @@ export const MobileNavbar = ({ children, menuItems }: MobileNavbarProps) => {
 
           <div className="flex  flex-col gap-4">
             <Button asChild variant="outline" className="w-full">
-              <Link href="#">
+              <Link href="/sign-in">
                 <span>Login</span>
               </Link>
             </Button>
 
             <Button asChild className="w-full">
-              <Link href="#">
+              <Link href="/sign-up">
                 <span>Sign Up</span>
               </Link>
             </Button>
